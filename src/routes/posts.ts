@@ -1,5 +1,6 @@
 import { Router, Request, Response, Router as ExpressRouter } from 'express';
 import postService from '../services/postService.js';
+import logger from '../logger.js';
 
 const router: ExpressRouter = Router();
 
@@ -9,9 +10,8 @@ router.get('/', async (req: Request, res: Response) => {
     const posts = await postService.getAllPosts();
     res.json(posts);
   } catch (error) {
-    res.status(500).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch posts',
-    });
+    logger.error('Unhandled error in GET /posts', { error });
+    res.status(500).json({ error: 'Failed to fetch posts' });
   }
 });
 
@@ -27,9 +27,8 @@ router.get('/:id', async (req: Request, res: Response) => {
     const post = await postService.getPostById(id);
     res.json(post);
   } catch (error) {
-    res.status(500).json({
-      error: error instanceof Error ? error.message : 'Failed to fetch post',
-    });
+    logger.error('Unhandled error in GET /posts/:id', { postId: req.params.id, error });
+    res.status(500).json({ error: 'Failed to fetch post' });
   }
 });
 
