@@ -19,7 +19,7 @@ router.get('/', async (req: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id as string, 10);
-    if (isNaN(id)) {
+    if (isNaN(id) || !Number.isSafeInteger(id) || id < 1 || id > 100) {
       res.status(400).json({ error: 'Invalid post ID' });
       return;
     }
